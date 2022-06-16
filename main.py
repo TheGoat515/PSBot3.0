@@ -26,7 +26,7 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
-ENTERRANK, ENTERNAME, ENTERSECTION, EDITPS = range(4)
+ENTERRANK, ENTERNAME, ENTERSECTION, EDITPS,END = range(5)
 
 
 # Define a few command handlers. These usually take the two arguments update and
@@ -130,6 +130,10 @@ def start(update: Update, context: CallbackContext) -> None:
     update.message.reply_html(
         fr'Hi {user.mention_html()}\!{chat_id}', )
 
+def end(update: Update, context: CallbackContext) -> None:
+        update.message.reply_html(
+        "Parade State Ended", )
+        return ConversationHandler.END
 
 def paradestate(update: Update, context: CallbackContext) -> int:
     global Totalstrength, Currentstrength, JurongCstrength, JurongTstrength, JurongLVE, JurongOFF, JurongMC, JurongOS, JurongAO, JurongOthers
@@ -433,7 +437,10 @@ def main() -> None:
     conv_handler2 = ConversationHandler(
         entry_points=[CommandHandler('ps', paradestate)],
         states={
-            EDITPS: [CallbackQueryHandler(paradestateEdit)],
+            EDITPS: [CallbackQueryHandler(paradestateEdit),
+                     CommandHandler('endps',end)
+            ]
+
         }, fallbacks=[MessageHandler(Filters.regex('^Done$'), done)]
     )
     # on different commands - answer in Telegram
