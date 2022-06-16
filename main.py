@@ -262,6 +262,16 @@ def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
     JurongCourse = 0
     JurongMA = 0
     JurongCstrength = 0
+    JLVE = ""
+    JOFF = ""
+    JMC = ""
+    JMA = ""
+    JRSO = ""
+    JRSI = ""
+    JOS = ""
+    JAO = ""
+    JCourse = ""
+    JOTHERS = ""
     # CallbackQueries need to be answered, even if no notification to the user is needed
     # Some clients may have trouble otherwise. See https://core.telegram.org/bots/api#callbackquery
     user = update.effective_user
@@ -329,7 +339,7 @@ def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
         if users[x]["Section"] == 'Section 3':
             S3=S3 + fr'{users[x]["Rank"]} {users[x]["Name"]}: {users[x]["PS"]}' + '\n'
         if users[x]["PS"] == "Off":
-            JurongOff+=1
+            JurongOFF+=1
         if users[x]["PS"] == "Leave":
             JurongLVE+=1
         if users[x]["PS"] == "MC":
@@ -370,6 +380,8 @@ def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
         JCourse = fr'CSE:{JurongCourse}' + '\n'
     if JurongOthers != 0:
         JOTHERS = fr'Others:{JurongOthers}' + '\n'
+    Totalstrength=JurongTstrength
+    Currentstrength=JurongCstrength
     query.edit_message_text(
         fr'<b>31FMD Parade State - {today} </b>' '\n' '\n'
         fr'Total Strength: {Totalstrength}' '\n'
