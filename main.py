@@ -280,6 +280,7 @@ def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
     # Some clients may have trouble otherwise. See https://core.telegram.org/bots/api#callbackquery
     user = update.effective_user
     userid = str(user.id)
+    print(userid)
   #  print(users[userid]["Rank"])
     #psname = fr"{psname}" + "\n" + fr"{users[userid]['Rank']} {users[userid]['Name']}"
     keyboard = [
@@ -448,6 +449,7 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("help", help))
     dispatcher.add_handler(conv_handler)
     dispatcher.add_handler(conv_handler2)
+    dispatcher.add_handler(CallbackQueryHandler(paradestateEdit))
     updater.start_polling()
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
