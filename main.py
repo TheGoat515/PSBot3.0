@@ -43,7 +43,7 @@ def setup(update: Update, context: CallbackContext) -> int:
         with open('user_data.json', 'w') as f:
             f.write("{}")
             print("New file created")
-    global userid, users, userexist
+    global users, userexist
     user = update.effective_user
     userid = str(user.id)
     # Read file and check for user
@@ -63,8 +63,10 @@ def setup(update: Update, context: CallbackContext) -> int:
 
 
 def getrank(update: Update, context: CallbackContext) -> int:
-    global ranktext, nametext, users, userid, userexist
+    global ranktext, nametext, users, userexist
     ranktext = update.message.text
+    user = update.effective_user
+    userid = str(user.id)
     print(ranktext)
     if users == {}:
         users = {userid: {"Rank": ranktext}}  # If file empty
@@ -78,7 +80,9 @@ def getrank(update: Update, context: CallbackContext) -> int:
 
 
 def getname(update: Update, context: CallbackContext) -> int:
-    global nametext, users, userid
+    global nametext, users
+    user = update.effective_user
+    userid = str(user.id)
     keyboard = [
         [
             InlineKeyboardButton("HQ", callback_data='HQ'),
@@ -98,7 +102,9 @@ def getname(update: Update, context: CallbackContext) -> int:
 
 
 def getsection(update: Update, context: CallbackContext) -> None:
-    global users, userid
+    global users
+    user = update.effective_user
+    userid = str(user.id)
     query = update.callback_query
     query.answer()
     sectiontext = query.data
@@ -135,7 +141,7 @@ def help(update: Update, context: CallbackContext) -> None:
 def start(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /start is issued."""
     user = update.effective_user
-    chat_id = user.id
+    chat_id = str(user.id)
     update.message.reply_html(
         fr'Hi {user.mention_html()}\!{chat_id}', )
 
@@ -147,20 +153,21 @@ def end(update: Update, context: CallbackContext) -> None:
 
 
 def getstuff(update: Update, context: CallbackContext) -> None:
+    print("GETSTUFFBOII")
     global Totalstrength, Currentstrength, JurongCstrength, JurongTstrength, JurongLVE, JurongOFF, JurongMC, JurongOS, JurongAO, JurongOthers
     global JurongRSO, JurongRSI, JurongCourse, JurongMA
-    global JLVE, JOFF, JMC, JOS, JAO, JOTHERS, JCourse, JMA, JRSO, JRSI, users, userid, HQ, S1, S2, S3, am, pm, query
+    global JLVE, JOFF, JMC, JOS, JAO, JOTHERS, JCourse, JMA, JRSO, JRSI, users, HQ, S1, S2, S3, am, pm, query
     user = update.effective_user
-    chatid = user.id
+    chatid = str(user.id)
     text = update.message.text
 
     if am == 1:
-        users[userid]["amtext"] = text
+        users[chatid]["amtext"] = text
     elif pm == 1:
-        users[userid]["pmtext"] = text
+        users[chatid]["pmtext"] = text
     else:
-        users[userid]["amtext"] = text
-        users[userid]["pmtext"] = text
+        users[chatid]["amtext"] = text
+        users[chatid]["pmtext"] = text
     pm = 0
     if query.data == "OS" or am == 1:
         am = 0
@@ -174,7 +181,9 @@ def getstuff(update: Update, context: CallbackContext) -> None:
 def getDate(update: Update, context: CallbackContext) -> None:
     global Totalstrength, Currentstrength, JurongCstrength, JurongTstrength, JurongLVE, JurongOFF, JurongMC, JurongOS, JurongAO, JurongOthers
     global JurongRSO, JurongRSI, JurongCourse, JurongMA
-    global JLVE, JOFF, JMC, JOS, JAO, JOTHERS, JCourse, JMA, JRSO, JRSI, users, userid, HQ, S1, S2, S3, am, pm
+    global JLVE, JOFF, JMC, JOS, JAO, JOTHERS, JCourse, JMA, JRSO, JRSI, users, HQ, S1, S2, S3, am, pm
+    user = update.effective_user
+    userid = str(user.id)
     query2 = update.callback_query
     query2.answer()
     bot = context.bot
@@ -344,7 +353,8 @@ def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
     """Parses the CallbackQuery and updates the message text."""
     global Totalstrength, Currentstrength, JurongCstrength, JurongTstrength, JurongLVE, JurongOFF, JurongMC, JurongOS, JurongAO, JurongOthers
     global JurongRSO, JurongRSI, JurongCourse, JurongMA
-    global JLVE, JOFF, JMC, JOS, JAO, JOTHERS, JCourse, JMA, JRSO, JRSI, users, userid, HQ, S1, S2, S3, am, pm, query
+    global JLVE, JOFF, JMC, JOS, JAO, JOTHERS, JCourse, JMA, JRSO, JRSI, users, HQ, S1, S2, S3, am, pm, query
+
     query = update.callback_query
     HQ = ""
     S1 = ""
@@ -555,6 +565,7 @@ def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
             users[userid]['amtext'] = ""
             users[userid]['pmtext'] = ""
             query.message.bot.sendMessage(chat_id=userid, text="Location?", parse_mode=ParseMode.HTML)
+            print("ENTERSTUFFFF")
             return ENTERSTUFF
         elif query.data == 'Course':
             users[userid]['AMPS'] = 'Course'
@@ -582,7 +593,7 @@ def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
 def paradestateEditMessage(update: Update, context: CallbackContext, ) -> None:
     global Totalstrength, Currentstrength, JurongCstrength, JurongTstrength, JurongLVE, JurongOFF, JurongMC, JurongOS, JurongAO, JurongOthers
     global JurongRSO, JurongRSI, JurongCourse, JurongMA, query
-    global JLVE, JOFF, JMC, JOS, JAO, JOTHERS, JCourse, JMA, JRSO, JRSI, users, userid, HQ, S1, S2, S3, am, pm
+    global JLVE, JOFF, JMC, JOS, JAO, JOTHERS, JCourse, JMA, JRSO, JRSI, users, HQ, S1, S2, S3, am
     am = 0
     pm = 0
     keyboard = [
