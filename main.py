@@ -5,7 +5,7 @@ from os.path import exists
 import logging
 import json
 from telegram import Update, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler, \
+from telegram.ext import Updater, CommandHandler, MessageHandler, CallbackContext, CallbackQueryHandler, \
     Filters, ConversationHandler
 from datetime import date
 
@@ -153,7 +153,6 @@ def end(update: Update, context: CallbackContext) -> None:
 
 
 def getstuff(update: Update, context: CallbackContext) -> None:
-    print("GETSTUFFBOII")
     global Totalstrength, Currentstrength, JurongCstrength, JurongTstrength, JurongLVE, JurongOFF, JurongMC, JurongOS, JurongAO, JurongOthers
     global JurongRSO, JurongRSI, JurongCourse, JurongMA
     global JLVE, JOFF, JMC, JOS, JAO, JOTHERS, JCourse, JMA, JRSO, JRSI, users, HQ, S1, S2, S3, am, pm, query
@@ -565,7 +564,6 @@ def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
             users[userid]['amtext'] = ""
             users[userid]['pmtext'] = ""
             query.message.bot.sendMessage(chat_id=userid, text="Location?", parse_mode=ParseMode.HTML)
-            print("ENTERSTUFFFF")
             return ENTERSTUFF
         elif query.data == 'Course':
             users[userid]['AMPS'] = 'Course'
@@ -625,9 +623,10 @@ def paradestateEditMessage(update: Update, context: CallbackContext, ) -> None:
         ]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    userdata = json.dumps(users)
-    with open('user_data.json', 'w') as outfile:
-        outfile.write(userdata)
+    HQ = ""
+    S1 = ""
+    S2 = ""
+    S3 = ""
     for x in users:
         if users[x]["Section"] == 'HQ':
             HQ = HQ + fr'{users[x]["Rank"]} {users[x]["Name"]}: '
@@ -726,7 +725,7 @@ def paradestateEditMessage(update: Update, context: CallbackContext, ) -> None:
         elif users[x]["Section"] == 'Section 3':
             S3 = S3 + fr'{users[x]["Rank"]} {users[x]["Name"]}: '
             if users[x]["AMPS"] == users[x]["PMPS"] and users[x]["amtext"] == users[x]["pmtext"]:
-                if users[x]["AMPS"]!="Others":
+                if users[x]["AMPS"] != "Others":
                     S3 = S3 + fr'{users[x]["AMPS"]}'
                 if users[x]["AMPS"] == "MA" or users[x]["AMPS"] == "RSO" or users[x]["AMPS"] == "RSI" or users[x][
                     "AMPS"] == "Present":
@@ -847,7 +846,7 @@ def main() -> None:
         }, fallbacks=[MessageHandler(Filters.regex('^Done$'), done)]
     )
     conv_handler2 = ConversationHandler(
-        entry_points=[CommandHandler('ps', paradestate)],
+        entry_points=[CommandHandler('ps', paradestate), CallbackQueryHandler(paradestateEdit)],
         states={
             EDITPS: [CallbackQueryHandler(paradestateEdit),
                      CommandHandler('endps', end)
