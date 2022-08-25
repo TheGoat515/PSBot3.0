@@ -7,9 +7,9 @@ import json
 from telegram import Update, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
 from telegram.ext import Updater, CommandHandler, MessageHandler, CallbackContext, CallbackQueryHandler, \
     Filters, ConversationHandler
-from datetime import date
+from datetime import date, datetime
+from threading import Timer
 
-# bot = Bot(BOT_TOKEN)
 global users, ranktext, nametext
 HQ = ""
 S1 = ""
@@ -28,7 +28,6 @@ print(today)
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
-
 logger = logging.getLogger(__name__)
 ENTERRANK, ENTERNAME, ENTERSECTION, EDITPS, END, ENTERSTUFF, EDITMESSAGE, ENTERDATE = range(8)
 
@@ -147,6 +146,39 @@ def start(update: Update, context: CallbackContext) -> None:
 
 
 def end(update: Update, context: CallbackContext) -> None:
+    global Totalstrength, Currentstrength, JurongCstrength, JurongTstrength, JurongLVE, JurongOFF, JurongMC, JurongOS, JurongAO, JurongOthers
+    global JurongRSO, JurongRSI, JurongCourse, JurongMA
+    global JLVE, JOFF, JMC, JOS, JAO, JOTHERS, JCourse, JMA, JRSO, JRSI, users
+    query.edit_message_text(
+        fr'<b>31FMD Parade State - {today} </b>' '\n' '\n'
+        fr'Total Strength: {Totalstrength}' '\n'
+        fr'Current Strength: {Currentstrength}' '\n' '\n'
+        '----------------------------------' '\n'
+        fr'Jurong Total Strength: {JurongTstrength}' '\n'
+        fr'Jurong Current Strength: {JurongCstrength}' '\n' '\n'
+        fr'{JLVE}'
+        fr'{JOFF}'
+        fr'{JRSO}'
+        fr'{JRSI}'
+        fr'{JMA}'
+        fr'{JMC}'
+        fr'{JOS}'
+        fr'{JAO}'
+        fr'{JCourse}'
+        fr'{JOTHERS}'
+        '\n'
+        '<b>HQ</b>' '\n'
+        fr'{HQ}'
+        '\n' '<b>Section 1</b>' '\n'
+        fr'{S1}'
+        '\n' '<b>Section 2</b>' '\n'
+        fr'{S2}'
+        '\n' '<b>Section 3</b>' '\n'
+        fr'{S3}', parse_mode='HTML'
+    )
+    userdata = json.dumps(users)
+    with open('user_data.json', 'w') as outfile:
+        outfile.write(userdata)
     update.message.reply_html(
         "Parade State Ended", )
     return ConversationHandler.END
@@ -181,7 +213,6 @@ def getDate(update: Update, context: CallbackContext) -> None:
     global Totalstrength, Currentstrength, JurongCstrength, JurongTstrength, JurongLVE, JurongOFF, JurongMC, JurongOS, JurongAO, JurongOthers
     global JurongRSO, JurongRSI, JurongCourse, JurongMA
     global JLVE, JOFF, JMC, JOS, JAO, JOTHERS, JCourse, JMA, JRSO, JRSI, users, HQ, S1, S2, S3, am, pm
-    datearray = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov","Dec"]
     user = update.effective_user
     userid = str(user.id)
     query2 = update.callback_query
@@ -192,17 +223,7 @@ def getDate(update: Update, context: CallbackContext) -> None:
         query2.edit_message_text(fr"You selected {date.date()}")
         am = 0
         pm = 0
-        EndDate = str(date.date())
-        EndDate = EndDate.split("-")
-        EndDate.pop(0)
-        EndDate[0] = datearray[int(EndDate[0])-1]
-
-        print(EndDate)
-        EndDate.reverse()
-        EndDate = "-".join(EndDate)
-        print(EndDate)
-        users[userid]["enddate"] = EndDate
-        print(date.date())
+        users[userid]["enddate"] = str(date.date())
         userdata = json.dumps(users)
         with open('user_data.json', 'w') as outfile:
             outfile.write(userdata)
@@ -216,16 +237,25 @@ def paradestate(update: Update, context: CallbackContext) -> int:
     global JLVE, JOFF, JMC, JOS, JAO, JOTHERS, JCourse, JMA, JRSO, JRSI, users
     with open('user_data.json') as json_file:
         users = json.load(json_file)
-    # print(users)
+    todaydate = date.today()
     for x in users:
-        if users[x]["AMPS"] == "Present" or users[x]["AMPS"] == "OS" or users[x]["AMPS"] == "RSO" or users[x]["AMPS"] == "RSI" or users[x]["AMPS"] == "MA":
+        if users[x]["AMPS"] == "Present" or users[x]["AMPS"] == "OS" or users[x]["AMPS"] == "RSO" or users[x][
+            "AMPS"] == "RSI" or users[x]["AMPS"] == "MA":
             users[x]["AMPS"] = ""
-            users[x]["amtext"]=""
-            users[x]["enddate"]=""
-        if users[x]["PMPS"] == "Present" or users[x]["PMPS"] == "OS" or users[x]["PMPS"] == "RSO" or users[x]["PMPS"] == "RSI" or users[x]["PMPS"] == "MA":
-            users[x]["PMPS"] = ""
-            users[x]["pmtext"]=""
+            users[x]["amtext"] = ""
             users[x]["enddate"] = ""
+        if users[x]["PMPS"] == "Present" or users[x]["PMPS"] == "OS" or users[x]["PMPS"] == "RSO" or users[x][
+            "PMPS"] == "RSI" or users[x]["PMPS"] == "MA":
+            users[x]["PMPS"] = ""
+            users[x]["pmtext"] = ""
+            users[x]["enddate"] = ""
+        if users[x]["enddate"] != "":
+            if datetime.strptime(users[x]["enddate"], '%Y-%m-%d').date() < todaydate:
+                users[x]['enddate'] = ""
+                users[x]["AMPS"] = ""
+                users[x]["PMPS"] = ""
+                users[x]["amtext"] = ""
+                users[x]["pmtext"] = ""
     Totalstrength = 0
     Currentstrength = 0
     JurongCstrength = 0
@@ -258,6 +288,7 @@ def paradestate(update: Update, context: CallbackContext) -> int:
     Currentstrength = JurongCstrength
     user = update.effective_user
     keyboard = [
+        [InlineKeyboardButton("TEST", callback_data='test')],
         [
             InlineKeyboardButton("AM", callback_data='AM'),
             InlineKeyboardButton("PM", callback_data='PM'),
@@ -336,6 +367,13 @@ def paradestate(update: Update, context: CallbackContext) -> int:
     return EDITPS
 
 
+# deletus, context : CallbackContext
+
+
+def deletemessage(deletus, context):
+    context.bot.deleteMessage(message_id=deletus.message_id, chat_id=deletus.chat_id)
+
+
 def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
     """Parses the CallbackQuery and updates the message text."""
     global Totalstrength, Currentstrength, JurongCstrength, JurongTstrength, JurongLVE, JurongOFF, JurongMC, JurongOS, JurongAO, JurongOthers
@@ -379,8 +417,16 @@ def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
 
     query.answer()
     if userid not in users:
-        query.message.reply_html(fr'{user.mention_html()} Please initate the bot')
-        query.message.reply_html("http://telegram.me/Parade_State_31_Bot?start=start")
+        delete = query.message.reply_html(fr'{user.mention_html()} Please initate the bot')
+        delete2 = query.message.reply_html("http://telegram.me/Parade_State_31_Bot?start=start")
+        t = Timer(10, deletemessage, args=(delete, context))
+        t2 = Timer(10, deletemessage, args=(delete2, context))
+
+        t.start()
+        t2.start()
+    # context.bot.deleteMessage(message_id=delete.message_id, chat_id = delete.chat_id)
+    # context.bot.deleteMessage(message_id=delete2.message_id, chat_id=delete2.chat_id)
+
     if query.data == "AM":
         am = 1
         users[userid]['AM'] = am
@@ -389,6 +435,8 @@ def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
         pm = 1
         users[userid]['PM'] = pm
         print(pm)
+    if query.data == 'test':
+        paradestateEditMessage(Update, CallbackContext)
 
     if am == 1 and pm == 0:
         if query.data == 'Off':
@@ -579,9 +627,22 @@ def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
 def paradestateEditMessage(update: Update, context: CallbackContext, ) -> None:
     global Totalstrength, Currentstrength, JurongCstrength, JurongTstrength, JurongLVE, JurongOFF, JurongMC, JurongOS, JurongAO, JurongOthers
     global JurongRSO, JurongRSI, JurongCourse, JurongMA, query
-    global JLVE, JOFF, JMC, JOS, JAO, JOTHERS, JCourse, JMA, JRSO, JRSI, users, HQ, S1, S2, S3, am
+    global JLVE, JOFF, JMC, JOS, JAO, JOTHERS, JCourse, JMA, JRSO, JRSI, users, HQ, S1, S2, S3, am, pm
+    datearray = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"]
     am = 0
     pm = 0
+    usersdate = {}
+    for x in users:
+        usersdate = {x: {"enddate": ""}}
+        if users[x]["enddate"] != "":
+            EndDate = str(users[x]["enddate"])
+            EndDate = EndDate.split('-')
+            EndDate.pop(0)
+            EndDate[0] = datearray[int(EndDate[0]) - 1]
+            EndDate.reverse()
+            EndDate = "-".join(EndDate)
+            usersdate[x]["enddate"] = EndDate
+
     keyboard = [
         [
             InlineKeyboardButton("AM", callback_data='AM'),
@@ -665,7 +726,7 @@ def paradestateEditMessage(update: Update, context: CallbackContext, ) -> None:
                     S1 = S1 + ' ' + fr'{users[x]["amtext"]}' + '\n'
                 elif users[x]["AMPS"] == "AO" or users[x]["AMPS"] == "Others" or users[x]["AMPS"] == "Course":
                     S1 = S1 + ' ' + fr'{users[x]["amtext"]}' + ' till ' + fr'{users[x]["enddate"]}' + '\n'
-                elif users[x]["AMPS"] == "" :
+                elif users[x]["AMPS"] == "":
                     S1 = S1 + "\n"
             else:
                 if users[x]["AMPS"] != "Others":
@@ -700,8 +761,8 @@ def paradestateEditMessage(update: Update, context: CallbackContext, ) -> None:
                     S2 = S2 + ' ' + fr'{users[x]["amtext"]}' + '\n'
                 elif users[x]["AMPS"] == "AO" or users[x]["AMPS"] == "Others" or users[x]["AMPS"] == "Course":
                     S2 = S2 + ' ' + fr'{users[x]["amtext"]}' + ' till ' + fr'{users[x]["enddate"]}' + '\n'
-                elif users[x]["AMPS"] == "" :
-                    S2=S2+"\n"
+                elif users[x]["AMPS"] == "":
+                    S2 = S2 + "\n"
             else:
                 if users[x]["AMPS"] != "Others":
                     S2 = S2 + fr'{users[x]["AMPS"]}'
