@@ -181,6 +181,7 @@ def getDate(update: Update, context: CallbackContext) -> None:
     global Totalstrength, Currentstrength, JurongCstrength, JurongTstrength, JurongLVE, JurongOFF, JurongMC, JurongOS, JurongAO, JurongOthers
     global JurongRSO, JurongRSI, JurongCourse, JurongMA
     global JLVE, JOFF, JMC, JOS, JAO, JOTHERS, JCourse, JMA, JRSO, JRSI, users, HQ, S1, S2, S3, am, pm
+    datearray = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov","Dec"]
     user = update.effective_user
     userid = str(user.id)
     query2 = update.callback_query
@@ -194,30 +195,8 @@ def getDate(update: Update, context: CallbackContext) -> None:
         EndDate = str(date.date())
         EndDate = EndDate.split("-")
         EndDate.pop(0)
-        if EndDate[0] == '01':
-            EndDate[0] = "Jan"
-        elif EndDate[0] == '02':
-            EndDate[0] = "Feb"
-        elif EndDate[0] == '03':
-            EndDate[0] = "Mar"
-        elif EndDate[0] == '04':
-            EndDate[0] = "Apr"
-        elif EndDate[0] == '05':
-            EndDate[0] = "May"
-        elif EndDate[0] == '06':
-            EndDate[0] = "Jun"
-        elif EndDate[0] == '07':
-            EndDate[0] = "Jul"
-        elif EndDate[0] == '08':
-            EndDate[0] = "Aug"
-        elif EndDate[0] == '09':
-            EndDate[0] = "Sep"
-        elif EndDate[0] == '10':
-            EndDate[0] = "Oct"
-        elif EndDate[0] == '11':
-            EndDate[0] = "Nov"
-        elif EndDate[0] == '12':
-            EndDate[0] = "Dec"
+        EndDate[0] = datearray[int(EndDate[0])-1]
+
         print(EndDate)
         EndDate.reverse()
         EndDate = "-".join(EndDate)
@@ -238,6 +217,15 @@ def paradestate(update: Update, context: CallbackContext) -> int:
     with open('user_data.json') as json_file:
         users = json.load(json_file)
     # print(users)
+    for x in users:
+        if users[x]["AMPS"] == "Present" or users[x]["AMPS"] == "OS" or users[x]["AMPS"] == "RSO" or users[x]["AMPS"] == "RSI" or users[x]["AMPS"] == "MA":
+            users[x]["AMPS"] = ""
+            users[x]["amtext"]=""
+            users[x]["enddate"]=""
+        if users[x]["PMPS"] == "Present" or users[x]["PMPS"] == "OS" or users[x]["PMPS"] == "RSO" or users[x]["PMPS"] == "RSI" or users[x]["PMPS"] == "MA":
+            users[x]["PMPS"] = ""
+            users[x]["pmtext"]=""
+            users[x]["enddate"] = ""
     Totalstrength = 0
     Currentstrength = 0
     JurongCstrength = 0
@@ -642,6 +630,8 @@ def paradestateEditMessage(update: Update, context: CallbackContext, ) -> None:
                     HQ = HQ + ' ' + fr'{users[x]["amtext"]}' + '\n'
                 elif users[x]["AMPS"] == "AO" or users[x]["AMPS"] == "Others" or users[x]["AMPS"] == "Course":
                     HQ = HQ + ' ' + fr'{users[x]["amtext"]}' + ' till ' + fr'{users[x]["enddate"]}' + '\n'
+                elif users[x]["AMPS"] == "":
+                    HQ = HQ + "\n"
             else:
                 if users[x]["AMPS"] != "Others":
                     HQ = HQ + fr'{users[x]["AMPS"]}'
@@ -655,11 +645,13 @@ def paradestateEditMessage(update: Update, context: CallbackContext, ) -> None:
                 if users[x]["PMPS"] == "MA" or users[x]["PMPS"] == "RSO" or users[x]["PMPS"] == "RSI" or users[x][
                     "PMPS"] == "Present":
                     HQ = HQ + "(PM)" + "\n"
+                elif users[x]["PMPS"] == "Leave":
+                    HQ = HQ + " till " + fr'{users[x]["enddate"]}' + "\n"
                 elif users[x]["PMPS"] == "OS":
                     HQ = HQ + ' ' + fr'{users[x]["pmtext"]}' + "(PM)" + '\n'
                 elif users[x]["PMPS"] == "AO" or users[x]["PMPS"] == "Course" or users[x]["PMPS"] == "Others":
                     HQ = HQ + ' ' + fr'{users[x]["pmtext"]}' + ' till ' + fr'{users[x]["enddate"]}' + '\n'
-        elif users[x]["Section"] == 'Section 1':
+        if users[x]["Section"] == 'Section 1':
             S1 = S1 + fr'{users[x]["Rank"]} {users[x]["Name"]}: '
             if users[x]["AMPS"] == users[x]["PMPS"] and users[x]["amtext"] == users[x]["pmtext"]:
                 if users[x]["AMPS"] != "Others":
@@ -673,6 +665,8 @@ def paradestateEditMessage(update: Update, context: CallbackContext, ) -> None:
                     S1 = S1 + ' ' + fr'{users[x]["amtext"]}' + '\n'
                 elif users[x]["AMPS"] == "AO" or users[x]["AMPS"] == "Others" or users[x]["AMPS"] == "Course":
                     S1 = S1 + ' ' + fr'{users[x]["amtext"]}' + ' till ' + fr'{users[x]["enddate"]}' + '\n'
+                elif users[x]["AMPS"] == "" :
+                    S1 = S1 + "\n"
             else:
                 if users[x]["AMPS"] != "Others":
                     S1 = S1 + fr'{users[x]["AMPS"]}'
@@ -686,12 +680,13 @@ def paradestateEditMessage(update: Update, context: CallbackContext, ) -> None:
                 if users[x]["PMPS"] == "MA" or users[x]["PMPS"] == "RSO" or users[x]["PMPS"] == "RSI" or users[x][
                     "PMPS"] == "Present":
                     S1 = S1 + "(PM)" + "\n"
+                elif users[x]["PMPS"] == "Leave":
+                    S1 = S1 + " till " + fr'{users[x]["enddate"]}' + "\n"
                 elif users[x]["PMPS"] == "OS":
                     S1 = S1 + ' ' + fr'{users[x]["pmtext"]}' + "(PM)" + '\n'
                 elif users[x]["PMPS"] == "AO" or users[x]["PMPS"] == "Course" or users[x]["PMPS"] == "Others":
                     S1 = S1 + ' ' + fr'{users[x]["pmtext"]}' + ' till ' + fr'{users[x]["enddate"]}' + '\n'
-
-        elif users[x]["Section"] == 'Section 2':
+        if users[x]["Section"] == 'Section 2':
             S2 = S2 + fr'{users[x]["Rank"]} {users[x]["Name"]}: '
             if users[x]["AMPS"] == users[x]["PMPS"] and users[x]["amtext"] == users[x]["pmtext"]:
                 if users[x]["AMPS"] != "Others":
@@ -705,6 +700,8 @@ def paradestateEditMessage(update: Update, context: CallbackContext, ) -> None:
                     S2 = S2 + ' ' + fr'{users[x]["amtext"]}' + '\n'
                 elif users[x]["AMPS"] == "AO" or users[x]["AMPS"] == "Others" or users[x]["AMPS"] == "Course":
                     S2 = S2 + ' ' + fr'{users[x]["amtext"]}' + ' till ' + fr'{users[x]["enddate"]}' + '\n'
+                elif users[x]["AMPS"] == "" :
+                    S2=S2+"\n"
             else:
                 if users[x]["AMPS"] != "Others":
                     S2 = S2 + fr'{users[x]["AMPS"]}'
@@ -718,11 +715,13 @@ def paradestateEditMessage(update: Update, context: CallbackContext, ) -> None:
                 if users[x]["PMPS"] == "MA" or users[x]["PMPS"] == "RSO" or users[x]["PMPS"] == "RSI" or users[x][
                     "PMPS"] == "Present":
                     S2 = S2 + "(PM)" + "\n"
+                elif users[x]["PMPS"] == "Leave":
+                    S2 = S2 + " till " + fr'{users[x]["enddate"]}' + "\n"
                 elif users[x]["PMPS"] == "OS":
                     S2 = S2 + ' ' + fr'{users[x]["pmtext"]}' + "(PM)" + '\n'
                 elif users[x]["PMPS"] == "AO" or users[x]["PMPS"] == "Course" or users[x]["PMPS"] == "Others":
                     S2 = S2 + ' ' + fr'{users[x]["pmtext"]}' + ' till ' + fr'{users[x]["enddate"]}' + '\n'
-        elif users[x]["Section"] == 'Section 3':
+        if users[x]["Section"] == 'Section 3':
             S3 = S3 + fr'{users[x]["Rank"]} {users[x]["Name"]}: '
             if users[x]["AMPS"] == users[x]["PMPS"] and users[x]["amtext"] == users[x]["pmtext"]:
                 if users[x]["AMPS"] != "Others":
@@ -736,6 +735,8 @@ def paradestateEditMessage(update: Update, context: CallbackContext, ) -> None:
                     S3 = S3 + ' ' + fr'{users[x]["amtext"]}' + '\n'
                 elif users[x]["AMPS"] == "AO" or users[x]["AMPS"] == "Others" or users[x]["AMPS"] == "Course":
                     S3 = S3 + ' ' + fr'{users[x]["amtext"]}' + ' till ' + fr'{users[x]["enddate"]}' + '\n'
+                elif users[x]["AMPS"] == "":
+                    S3 = S3 + "\n"
             else:
                 if users[x]["AMPS"] != "Others":
                     S3 = S3 + fr'{users[x]["AMPS"]}'
@@ -749,10 +750,13 @@ def paradestateEditMessage(update: Update, context: CallbackContext, ) -> None:
                 if users[x]["PMPS"] == "MA" or users[x]["PMPS"] == "RSO" or users[x]["PMPS"] == "RSI" or users[x][
                     "PMPS"] == "Present":
                     S3 = S3 + "(PM)" + "\n"
+                elif users[x]["PMPS"] == "Leave":
+                    S3 = S3 + " till " + fr'{users[x]["enddate"]}' + "\n"
                 elif users[x]["PMPS"] == "OS":
                     S3 = S3 + ' ' + fr'{users[x]["pmtext"]}' + "(PM)" + '\n'
                 elif users[x]["PMPS"] == "AO" or users[x]["PMPS"] == "Course" or users[x]["PMPS"] == "Others":
-                    S3 = S3 + ' ' + fr'{users[x]["pmtext"]}' + ' till ' + fr'{users[x]["enddate"]}' + '\n'
+                    HQ = HQ + ' ' + fr'{users[x]["pmtext"]}' + ' till ' + fr'{users[x]["enddate"]}' + '\n'
+
         if users[x]["AMPS"] == "Off":
             JurongOFF += 1
         if users[x]["AMPS"] == "Leave":
