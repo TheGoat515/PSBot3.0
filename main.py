@@ -804,7 +804,7 @@ def paradestateEditMessage(update: Update, context: CallbackContext, ) -> None:
                 if users[x]["PMPS"] == "MA" or users[x]["PMPS"] == "RSO" or users[x]["PMPS"] == "RSI" or users[x][
                     "PMPS"] == "Present":
                     HQ = HQ + "(PM)" + "\n"
-                elif users[x]["PMPS"] == "Leave":
+                elif users[x]["PMPS"] == "Leave" or users[x]["PMPS"] == "Off" or users[x]["PMPS"] == "MC":
                     HQ = HQ + " till " + fr'{users[x]["enddate"]}' + "\n"
                 elif users[x]["PMPS"] == "OS":
                     HQ = HQ + ' ' + fr'{users[x]["pmtext"]}' + "(PM)" + '\n'
@@ -839,7 +839,7 @@ def paradestateEditMessage(update: Update, context: CallbackContext, ) -> None:
                 if users[x]["PMPS"] == "MA" or users[x]["PMPS"] == "RSO" or users[x]["PMPS"] == "RSI" or users[x][
                     "PMPS"] == "Present":
                     S1 = S1 + "(PM)" + "\n"
-                elif users[x]["PMPS"] == "Leave":
+                elif users[x]["PMPS"] == "Leave" or users[x]["PMPS"] == "Off" or users[x]["PMPS"] == "MC":
                     S1 = S1 + " till " + fr'{users[x]["enddate"]}' + "\n"
                 elif users[x]["PMPS"] == "OS":
                     S1 = S1 + ' ' + fr'{users[x]["pmtext"]}' + "(PM)" + '\n'
@@ -874,7 +874,7 @@ def paradestateEditMessage(update: Update, context: CallbackContext, ) -> None:
                 if users[x]["PMPS"] == "MA" or users[x]["PMPS"] == "RSO" or users[x]["PMPS"] == "RSI" or users[x][
                     "PMPS"] == "Present":
                     S2 = S2 + "(PM)" + "\n"
-                elif users[x]["PMPS"] == "Leave":
+                elif users[x]["PMPS"] == "Leave" or users[x]["PMPS"] == "Off" or users[x]["PMPS"] == "MC":
                     S2 = S2 + " till " + fr'{users[x]["enddate"]}' + "\n"
                 elif users[x]["PMPS"] == "OS":
                     S2 = S2 + ' ' + fr'{users[x]["pmtext"]}' + "(PM)" + '\n'
@@ -909,12 +909,12 @@ def paradestateEditMessage(update: Update, context: CallbackContext, ) -> None:
                 if users[x]["PMPS"] == "MA" or users[x]["PMPS"] == "RSO" or users[x]["PMPS"] == "RSI" or users[x][
                     "PMPS"] == "Present":
                     S3 = S3 + "(PM)" + "\n"
-                elif users[x]["PMPS"] == "Leave":
+                elif users[x]["PMPS"] == "Leave" or users[x]["PMPS"] == "Off" or users[x]["PMPS"] == "MC":
                     S3 = S3 + " till " + fr'{users[x]["enddate"]}' + "\n"
                 elif users[x]["PMPS"] == "OS":
                     S3 = S3 + ' ' + fr'{users[x]["pmtext"]}' + "(PM)" + '\n'
                 elif users[x]["PMPS"] == "AO" or users[x]["PMPS"] == "Course" or users[x]["PMPS"] == "Others":
-                    HQ = HQ + ' ' + fr'{users[x]["pmtext"]}' + ' till ' + fr'{users[x]["enddate"]}' + '\n'
+                    S3 = S3 + ' ' + fr'{users[x]["pmtext"]}' + ' till ' + fr'{users[x]["enddate"]}' + '\n'
 
         if users[x]["AMPS"] == "Off":
             JurongOFF += 1
