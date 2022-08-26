@@ -1,3 +1,5 @@
+#so i dont delete everyone's data again woops
+.json
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
