@@ -48,7 +48,6 @@ def setup(update: Update, context: CallbackContext) -> int:
     # Read file and check for user
     with open('user_data.json') as json_file:
         users = json.load(json_file)
-    # print(users)
     if userid in users:
         update.message.reply_html("User already exists")
         userexist = True
@@ -442,107 +441,173 @@ def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
         if query.data == 'Off':
             users[userid]['AMPS'] = 'Off'
             users[userid]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             paradestateEditMessage(Update, CallbackContext)
         elif query.data == 'Leave':
             users[userid]['AMPS'] = 'Leave'
             users[userid]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             paradestateEditMessage(Update, CallbackContext)
         elif query.data == 'MC':
             users[userid]['AMPS'] = 'MC'
             users[userid]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             paradestateEditMessage(Update, CallbackContext)
         elif query.data == 'MA':
             users[userid]['AMPS'] = 'MA'
             users[userid]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             paradestateEditMessage(Update, CallbackContext)
         elif query.data == 'RSO':
             users[userid]['AMPS'] = 'RSO'
             users[userid]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             paradestateEditMessage(Update, CallbackContext)
         elif query.data == 'RSI':
             users[userid]['AMPS'] = 'RSI'
             users[userid]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             paradestateEditMessage(Update, CallbackContext)
         elif query.data == 'AO':
             users[userid]['AMPS'] = 'AO'
             users[userid]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             query.message.bot.sendMessage(chat_id=userid, text="Location?", parse_mode=ParseMode.HTML)
             return ENTERSTUFF
         elif query.data == 'OS':
             users[userid]['AMPS'] = 'OS'
             users[userid]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             query.message.bot.sendMessage(chat_id=userid, text="Location?", parse_mode=ParseMode.HTML)
             return ENTERSTUFF
         elif query.data == 'Course':
             users[userid]['AMPS'] = 'Course'
             users[userid]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             query.message.bot.sendMessage(chat_id=userid, text="Course name?", parse_mode=ParseMode.HTML)
             return ENTERSTUFF
         elif query.data == 'Others':
             users[userid]['AMPS'] = 'Others'
             users[userid]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             query.message.bot.sendMessage(chat_id=userid, text="Please enter your parade state.",
                                           parse_mode=ParseMode.HTML)
             return ENTERSTUFF
         elif query.data == 'Present':
             users[userid]['AMPS'] = 'Present'
             users[userid]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             paradestateEditMessage(Update, CallbackContext)
     elif am == 0 and pm == 1:
         if query.data == 'Off':
             users[userid]['PMPS'] = 'Off'
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             query.message.bot.sendMessage(chat_id=userid, text="End Date?",
                                           reply_markup=telegramcalendar.create_calendar(), parse_mode=ParseMode.HTML)
             return ENTERDATE
         elif query.data == 'Leave':
             users[userid]['PMPS'] = 'Leave'
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             query.message.bot.sendMessage(chat_id=userid, text="End Date?",
                                           reply_markup=telegramcalendar.create_calendar(), parse_mode=ParseMode.HTML)
             return ENTERDATE
         elif query.data == 'MC':
             users[userid]['PMPS'] = 'MC'
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             query.message.bot.sendMessage(chat_id=userid, text="End Date?",
                                           reply_markup=telegramcalendar.create_calendar(), parse_mode=ParseMode.HTML)
             return ENTERDATE
         elif query.data == 'MA':
             users[userid]['PMPS'] = 'MA'
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             paradestateEditMessage(Update, CallbackContext)
         elif query.data == 'RSO':
             users[userid]['PMPS'] = 'RSO'
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             paradestateEditMessage(Update, CallbackContext)
         elif query.data == 'RSI':
             users[userid]['PMPS'] = 'RSI'
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             paradestateEditMessage(Update, CallbackContext)
         elif query.data == 'AO':
             users[userid]['PMPS'] = 'AO'
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             query.message.bot.sendMessage(chat_id=userid, text="Location?", parse_mode=ParseMode.HTML)
             return ENTERSTUFF
         elif query.data == 'OS':
             users[userid]['PMPS'] = 'OS'
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             query.message.bot.sendMessage(chat_id=userid, text="Location?", parse_mode=ParseMode.HTML)
             return ENTERSTUFF
         elif query.data == 'Course':
             users[userid]['PMPS'] = 'Course'
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             query.message.bot.sendMessage(chat_id=userid, text="Course Name?", parse_mode=ParseMode.HTML)
             return ENTERSTUFF
         elif query.data == 'Others':
             users[userid]['PMPS'] = 'Others'
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             query.message.bot.sendMessage(chat_id=userid, text="Please enter your parade state.",
                                           parse_mode=ParseMode.HTML)
             return ENTERSTUFF
         elif query.data == 'Present':
             users[userid]['PMPS'] = 'Present'
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             paradestateEditMessage(Update, CallbackContext)
     elif am == pm:
         if query.data == 'Off':
@@ -550,6 +615,9 @@ def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
             users[userid]['PMPS'] = 'Off'
             users[userid]['amtext'] = ""
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             query.message.bot.sendMessage(chat_id=userid, text="End Date?",
                                           reply_markup=telegramcalendar.create_calendar(), parse_mode=ParseMode.HTML)
             return ENTERDATE
@@ -558,6 +626,9 @@ def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
             users[userid]['PMPS'] = 'Leave'
             users[userid]['amtext'] = ""
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             query.message.bot.sendMessage(chat_id=userid, text="End Date?",
                                           reply_markup=telegramcalendar.create_calendar(), parse_mode=ParseMode.HTML)
             return ENTERDATE
@@ -566,6 +637,9 @@ def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
             users[userid]['PMPS'] = 'MC'
             users[userid]['amtext'] = ""
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             query.message.bot.sendMessage(chat_id=userid, text="End Date?",
                                           reply_markup=telegramcalendar.create_calendar(), parse_mode=ParseMode.HTML)
             return ENTERDATE
@@ -574,24 +648,36 @@ def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
             users[userid]['PMPS'] = 'MA'
             users[userid]['amtext'] = ""
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             paradestateEditMessage(Update, CallbackContext)
         elif query.data == 'RSO':
             users[userid]['AMPS'] = 'RSO'
             users[userid]['PMPS'] = 'RSO'
             users[userid]['amtext'] = ""
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             paradestateEditMessage(Update, CallbackContext)
         elif query.data == 'RSI':
             users[userid]['AMPS'] = 'RSI'
             users[userid]['PMPS'] = 'RSI'
             users[userid]['amtext'] = ""
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             paradestateEditMessage(Update, CallbackContext)
         elif query.data == 'AO':
             users[userid]['AMPS'] = 'AO'
             users[userid]['PMPS'] = 'AO'
             users[userid]['amtext'] = ""
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             query.message.bot.sendMessage(chat_id=userid, text="Location?", parse_mode=ParseMode.HTML)
             return ENTERSTUFF
         elif query.data == 'OS':
@@ -599,6 +685,9 @@ def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
             users[userid]['PMPS'] = 'OS'
             users[userid]['amtext'] = ""
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             query.message.bot.sendMessage(chat_id=userid, text="Location?", parse_mode=ParseMode.HTML)
             return ENTERSTUFF
         elif query.data == 'Course':
@@ -606,6 +695,9 @@ def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
             users[userid]['PMPS'] = 'Course'
             users[userid]['amtext'] = ""
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             query.message.bot.sendMessage(chat_id=userid, text="Course name?", parse_mode=ParseMode.HTML)
             return ENTERSTUFF
         elif query.data == 'Others':
@@ -613,6 +705,9 @@ def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
             users[userid]['PMPS'] = 'Others'
             users[userid]['amtext'] = ""
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             query.message.bot.sendMessage(chat_id=userid, text="Please enter your parade state.",
                                           parse_mode=ParseMode.HTML)
             return ENTERSTUFF
@@ -621,6 +716,9 @@ def paradestateEdit(update: Update, context: CallbackContext, ) -> None:
             users[userid]['PMPS'] = 'Present'
             users[userid]['amtext'] = ""
             users[userid]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
             paradestateEditMessage(Update, CallbackContext)
 
 
