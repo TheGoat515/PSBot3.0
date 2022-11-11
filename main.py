@@ -10,7 +10,8 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, CallbackContex
 from datetime import date, datetime
 from threading import Timer
 
-global users, ranktext, nametext
+global users, ranktext, nametext,useridother
+
 HQ = ""
 S1 = ""
 S2 = ""
@@ -29,7 +30,7 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
 logger = logging.getLogger(__name__)
-ENTERRANK, ENTERNAME, ENTERSECTION, EDITPS, END, ENTERSTUFF, EDITMESSAGE, ENTERDATE = range(8)
+ENTERRANK, ENTERNAME, ENTERSECTION, EDITPS, END, ENTERSTUFF, EDITMESSAGE, ENTERDATE, ENTERSTUFFOthers,namechoose,ENTERDATEOthers,selectpsother = range(12)
 
 
 # Define a few command handlers. These usually take the two arguments update and
@@ -49,6 +50,8 @@ def setup(update: Update, context: CallbackContext) -> int:
     with open('user_data.json') as json_file:
         users = json.load(json_file)
     if userid in users:
+        print(userid)
+        print(users)
         update.message.reply_html("User already exists")
         userexist = True
     else:
@@ -129,20 +132,13 @@ def done(update: Update, context: CallbackContext) -> None:
 
 
 def help(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /help is issued."""
-    user = update.effective_user
-    update.message.reply_html(
-        '/help to display this text' '\n'
-        '/setup to setup the bot with your info' '\n', )
-
-
-def start(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /start is issued."""
-    user = update.effective_user
-    chat_id = str(user.id)
-    update.message.reply_html(
-        fr'Hi {user.mention_html()}\!{chat_id}', )
-
+   # """Send a message when the command /help is issued."""
+        update.message.reply_html(
+            "Use /help to see this message" "\n"
+            "Use /ps to start a new parade state" "\n"
+            "Use /endps to end the current parade state" "\n"
+            "Use /setup to edit your info" "\n"
+        )
 
 def end(update: Update, context: CallbackContext) -> None:
     global Totalstrength, Currentstrength, JurongCstrength, JurongTstrength, JurongLVE, JurongOFF, JurongMC, JurongOS, JurongAO, JurongOthers
@@ -989,6 +985,97 @@ def paradestateEditMessage(update: Update, context: CallbackContext, ) -> None:
 
     )
 
+def paradestateOthers(update: Update, context: CallbackContext, ) -> None:
+    keyboard = [
+        [
+            InlineKeyboardButton("1", callback_data='AM'),
+            InlineKeyboardButton("2", callback_data='PM'),
+            InlineKeyboardButton("3", callback_data='PM'),
+            InlineKeyboardButton("4", callback_data='PM'),
+            InlineKeyboardButton("5", callback_data='PM'),
+            InlineKeyboardButton("6", callback_data='PM'),
+        ],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_html("Enter rank/name to edit parade state e.g (CPL Tan Ah Beng)")
+    return namechoose
+def chooseName(update: Update, context: CallbackContext, ) -> None:
+    global users,useridother
+    text=update.message.text
+    textlist=text.split(maxsplit=1)
+    rank=textlist[0]
+    name=textlist[1]
+    print(rank)
+    print(name)
+    rank=rank.lower()
+    name=name.lower()
+    for x in users:
+        print(x)
+        if users[x]["Rank"].lower()==rank:
+            if users[x]["Name"].lower()==name:
+                useridother=x
+                break
+                if x==users.keys()[-1]:
+                    update.message.reply_html("Person not found, please enter /editps to try again.")
+                    return ConversationHandler.END
+                    break
+    keyboard = [
+        [
+            InlineKeyboardButton("AM", callback_data='AMO'),
+            InlineKeyboardButton("PM", callback_data='PMO'),
+        ],
+        [
+            InlineKeyboardButton("Off", callback_data='OffO'),
+            InlineKeyboardButton("Leave", callback_data='LeaveO'),
+        ],
+        [InlineKeyboardButton("MC", callback_data='MCO'),
+         InlineKeyboardButton("MA", callback_data="MAO"),
+         ],
+        [
+            InlineKeyboardButton("RSO", callback_data="RSOO"),
+            InlineKeyboardButton("RSI", callback_data="RSIO")
+        ],
+        [
+            InlineKeyboardButton("AO", callback_data="AOO"),
+            InlineKeyboardButton("OS", callback_data="OSO")
+        ],
+        [
+            InlineKeyboardButton("CSE", callback_data="CourseO"),
+            InlineKeyboardButton("Others", callback_data="OthersO")
+        ],
+        [
+            InlineKeyboardButton("Present", callback_data="PresentO")
+        ]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text("Please select Parade State",reply_markup=reply_markup)
+    return selectpsother
+def SelectPSOthers(update: Update, context: CallbackContext, ) -> None:
+    query3=update.callback_query
+    query3.answer()
+    query3.edit_message_text("PS Selected")
+    return ENTERSTUFFOthers
+def getstuffOthers(update: Update, context: CallbackContext, ) -> None:
+    update.message.reply_html("gso")
+    return ENTERDATEOthers
+def getDateOthers(update: Update, context: CallbackContext, ) -> None:
+    user = update.effective_user
+    userid = str(user.id)
+    query4 = update.callback_query
+    query4.answer()
+    bot = context.bot
+    selected, date = telegramcalendar.process_calendar_selection(bot, update)
+    if selected:
+        query2.edit_message_text(fr"You selected {date.date()}")
+        am = 0
+        pm = 0
+        users[userid]["enddate"] = str(date.date())
+        userdata = json.dumps(users)
+        with open('user_data.json', 'w') as outfile:
+            outfile.write(userdata)
+        paradestateEditMessage(Update, CallbackContext)
+        return EDITPS
+    return ConversationHandler.END
 
 def main() -> None:
     """Start the bot."""
@@ -1006,7 +1093,8 @@ def main() -> None:
             ],
             ENTERNAME: [MessageHandler(Filters.text & ~(Filters.command), getname)],
             ENTERSECTION: [CallbackQueryHandler(getsection)],
-        }, fallbacks=[MessageHandler(Filters.regex('^Done$'), done)]
+        }, fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
+        run_async=True
     )
     conv_handler2 = ConversationHandler(
         entry_points=[CommandHandler('ps', paradestate), CallbackQueryHandler(paradestateEdit)],
@@ -1017,13 +1105,25 @@ def main() -> None:
             ENTERSTUFF: [MessageHandler(Filters.text, getstuff)],
             ENTERDATE: [CallbackQueryHandler(getDate)],
         }, fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
-        per_chat=False
+        per_chat=False,run_async=True
+    )
+
+    conv_handler3 = ConversationHandler(
+        entry_points=[CommandHandler('editps', paradestateOthers)],
+        states={
+            namechoose:[MessageHandler(Filters.text, chooseName)],
+            selectpsother:[CallbackQueryHandler(SelectPSOthers)],
+            ENTERSTUFFOthers: [MessageHandler(Filters.text, getstuffOthers)],
+            ENTERDATEOthers: [CallbackQueryHandler(getDateOthers)],
+        },fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
+        per_chat=False, run_async=True
     )
     # on different commands - answer in Telegram
     # dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help))
     dispatcher.add_handler(conv_handler)
     dispatcher.add_handler(conv_handler2)
+    dispatcher.add_handler(conv_handler3)
     dispatcher.add_handler(CallbackQueryHandler(paradestateEdit))
     updater.start_polling()
 
