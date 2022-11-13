@@ -986,17 +986,6 @@ def paradestateEditMessage(update: Update, context: CallbackContext, ) -> None:
     )
 
 def paradestateOthers(update: Update, context: CallbackContext, ) -> None:
-    keyboard = [
-        [
-            InlineKeyboardButton("1", callback_data='AM'),
-            InlineKeyboardButton("2", callback_data='PM'),
-            InlineKeyboardButton("3", callback_data='PM'),
-            InlineKeyboardButton("4", callback_data='PM'),
-            InlineKeyboardButton("5", callback_data='PM'),
-            InlineKeyboardButton("6", callback_data='PM'),
-        ],
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
     update.message.reply_html("Enter rank/name to edit parade state e.g (CPL Tan Ah Beng)")
     return namechoose
 def chooseName(update: Update, context: CallbackContext, ) -> None:
@@ -1051,25 +1040,330 @@ def chooseName(update: Update, context: CallbackContext, ) -> None:
     update.message.reply_text("Please select Parade State",reply_markup=reply_markup)
     return selectpsother
 def SelectPSOthers(update: Update, context: CallbackContext, ) -> None:
+    global users,useridother
+    am = 0
+    pm = 0
     query3=update.callback_query
     query3.answer()
     query3.edit_message_text("PS Selected")
-    return ENTERSTUFFOthers
+    if query3.data == "AMO":
+        am = 1
+        users[useridother]['AM'] = am
+        print(am)
+    if query3.data == "PMO":
+        pm = 1
+        users[useridother]['PM'] = pm
+        print(pm)
+
+    if am == 1 and pm == 0:
+        if query3.data == 'OffO':
+            users[useridother]['AMPS'] = 'Off'
+            users[useridother]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            paradestateEditMessage(Update, CallbackContext)
+        elif query3.data == 'LeaveO':
+            users[useridother]['AMPS'] = 'Leave'
+            users[useridother]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            paradestateEditMessage(Update, CallbackContext)
+        elif query3.data == 'MCO':
+            users[useridother]['AMPS'] = 'MC'
+            users[useridother]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            paradestateEditMessage(Update, CallbackContext)
+        elif query3.data == 'MAO':
+            users[useridother]['AMPS'] = 'MA'
+            users[useridother]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            paradestateEditMessage(Update, CallbackContext)
+        elif query3.data == 'RSOO':
+            users[useridother]['AMPS'] = 'RSO'
+            users[useridother]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            paradestateEditMessage(Update, CallbackContext)
+        elif query3.data == 'RSIO':
+            users[useridother]['AMPS'] = 'RSI'
+            users[useridother]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            paradestateEditMessage(Update, CallbackContext)
+        elif query3.data == 'AOO':
+            users[useridother]['AMPS'] = 'AO'
+            users[useridother]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            query3.message.reply_text("Location?")
+            return ENTERSTUFFOthers
+        elif query3.data == 'OSO':
+            users[useridother]['AMPS'] = 'OS'
+            users[useridother]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            query3.message.reply_text("Location?")
+            return ENTERSTUFFOthers
+        elif query3.data == 'CourseO':
+            users[useridother]['AMPS'] = 'Course'
+            users[useridother]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            query3.message.reply_text("Course name?")
+            return ENTERSTUFFOthers
+        elif query3.data == 'OthersO':
+            users[useridother]['AMPS'] = 'Others'
+            users[useridother]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            query3.message.reply_text("Please enter your parade state.")
+            return ENTERSTUFFOthers
+        elif query3.data == 'PresentO':
+            users[useridother]['AMPS'] = 'Present'
+            users[useridother]['amtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            paradestateEditMessage(Update, CallbackContext)
+    elif am == 0 and pm == 1:
+        if query3.data == 'OffO':
+            users[useridother]['PMPS'] = 'Off'
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            query3.message.reply_text("End Date?",reply_markup=telegramcalendar.create_calendar())
+            return ENTERDATEOthers
+        elif query3.data == 'LeaveO':
+            users[useridother]['PMPS'] = 'Leave'
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            query3.message.reply_text("End Date?", reply_markup=telegramcalendar.create_calendar())
+            return ENTERDATEOthers
+        elif query3.data == 'MCO':
+            users[useridother]['PMPS'] = 'MC'
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            query3.message.reply_text("End Date?", reply_markup=telegramcalendar.create_calendar())
+            return ENTERDATEOthers
+        elif query3.data == 'MAO':
+            users[useridother]['PMPS'] = 'MA'
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            paradestateEditMessage(Update, CallbackContext)
+        elif query3.data == 'RSOO':
+            users[useridother]['PMPS'] = 'RSO'
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            paradestateEditMessage(Update, CallbackContext)
+        elif query3.data == 'RSIO':
+            users[useridother]['PMPS'] = 'RSI'
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            paradestateEditMessage(Update, CallbackContext)
+        elif query3.data == 'AOO':
+            users[useridother]['PMPS'] = 'AO'
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            query3.message.reply_text("Location?")
+            return ENTERSTUFFOthers
+        elif query3.data == 'OSO':
+            users[useridother]['PMPS'] = 'OS'
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            query3.message.reply_text("Location?")
+            return ENTERSTUFFOthers
+        elif query3.data == 'CourseO':
+            users[useridother]['PMPS'] = 'Course'
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            query3.message.reply_text("Course Name?")
+            return ENTERSTUFFOthers
+        elif query3.data == 'OthersO':
+            users[useridother]['PMPS'] = 'Others'
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            query3.message.reply_text("Please enter your parade state ")
+            return ENTERSTUFFOthers
+        elif query3.data == 'PresentO':
+            users[useridother]['PMPS'] = 'Present'
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            paradestateEditMessage(Update, CallbackContext)
+    elif am == pm:
+        if query3.data == 'OffO':
+            users[useridother]['AMPS'] = 'Off'
+            users[useridother]['PMPS'] = 'Off'
+            users[useridother]['amtext'] = ""
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            query3.message.reply_text("End Date?", reply_markup=telegramcalendar.create_calendar())
+            return ENTERDATEOthers
+        elif query3.data == 'LeaveO':
+            users[useridother]['AMPS'] = 'Leave'
+            users[useridother]['PMPS'] = 'Leave'
+            users[useridother]['amtext'] = ""
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            query3.message.reply_text("End Date?", reply_markup=telegramcalendar.create_calendar())
+            return ENTERDATEOthers
+        elif query3.data == 'MCO':
+            users[useridother]['AMPS'] = 'MC'
+            users[useridother]['PMPS'] = 'MC'
+            users[useridother]['amtext'] = ""
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            query3.message.reply_text("End Date?", reply_markup=telegramcalendar.create_calendar())
+            return ENTERDATEOthers
+        elif query3.data == 'MAO':
+            users[useridother]['AMPS'] = 'MA'
+            users[useridother]['PMPS'] = 'MA'
+            users[useridother]['amtext'] = ""
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            paradestateEditMessage(Update, CallbackContext)
+        elif query3.data == 'RSOO':
+            users[useridother]['AMPS'] = 'RSO'
+            users[useridother]['PMPS'] = 'RSO'
+            users[useridother]['amtext'] = ""
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            paradestateEditMessage(Update, CallbackContext)
+        elif query3.data == 'RSIO':
+            users[useridother]['AMPS'] = 'RSI'
+            users[useridother]['PMPS'] = 'RSI'
+            users[useridother]['amtext'] = ""
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            paradestateEditMessage(Update, CallbackContext)
+        elif query3.data == 'AOO':
+            users[useridother]['AMPS'] = 'AO'
+            users[useridother]['PMPS'] = 'AO'
+            users[useridother]['amtext'] = ""
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            query3.message.reply_text("Location?")
+            return ENTERSTUFFOthers
+        elif query3.data == 'OSO':
+            users[useridother]['AMPS'] = 'OS'
+            users[useridother]['PMPS'] = 'OS'
+            users[useridother]['amtext'] = ""
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            query3.message.reply_html("Location?")
+            return ENTERSTUFFOthers
+        elif query3.data == 'CourseO':
+            users[useridother]['AMPS'] = 'Course'
+            users[useridother]['PMPS'] = 'Course'
+            users[useridother]['amtext'] = ""
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            query3.message.reply_text("Course name?")
+            return ENTERSTUFFOthers
+        elif query3.data == 'OthersO':
+            users[useridother]['AMPS'] = 'Others'
+            users[useridother]['PMPS'] = 'Others'
+            users[useridother]['amtext'] = ""
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            query3.message.reply_text("Please enter your parade state.")
+            return ENTERSTUFFOthers
+        elif query3.data == 'PresentO':
+            users[useridother]['AMPS'] = 'Present'
+            users[useridother]['PMPS'] = 'Present'
+            users[useridother]['amtext'] = ""
+            users[useridother]['pmtext'] = ""
+            userdata = json.dumps(users)
+            with open('user_data.json', 'w') as outfile:
+                outfile.write(userdata)
+            paradestateEditMessage(Update, CallbackContext)
+            return ConversationHandler.END
+    update.message.reply_text("Parade State changed")
+    return ConversationHandler.END
 def getstuffOthers(update: Update, context: CallbackContext, ) -> None:
-    update.message.reply_html("gso")
-    return ENTERDATEOthers
+    global users, useridother,am,pm
+    text = update.message.text
+    am=users[useridother]["AM"]
+    pm=users[useridother]["PM"]
+    if am == 1:
+        users[useridother]["amtext"] = text
+    elif pm == 1:
+        users[useridother]["pmtext"] = text
+    else:
+        users[useridother]["amtext"] = text
+        users[useridother]["pmtext"] = text
+    pm = 0
+    if query.data == "OS" or am == 1:
+        am = 0
+        paradestateEditMessage(Update, CallbackContext)
+        update.message.reply_text("Parade State Changed")
+        return ConversationHandler.END
+    else:
+        update.message.reply_html("Please select end date", reply_markup=telegramcalendar.create_calendar())
+        return ENTERDATEOthers
 def getDateOthers(update: Update, context: CallbackContext, ) -> None:
-    user = update.effective_user
-    userid = str(user.id)
+    global users,useridother
     query4 = update.callback_query
     query4.answer()
     bot = context.bot
     selected, date = telegramcalendar.process_calendar_selection(bot, update)
     if selected:
-        query2.edit_message_text(fr"You selected {date.date()}")
+        query4.edit_message_text(fr"You selected {date.date()}")
         am = 0
         pm = 0
-        users[userid]["enddate"] = str(date.date())
+        users[useridother]["enddate"] = str(date.date())
         userdata = json.dumps(users)
         with open('user_data.json', 'w') as outfile:
             outfile.write(userdata)
